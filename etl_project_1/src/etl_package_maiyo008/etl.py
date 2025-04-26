@@ -37,3 +37,50 @@ class Extract:
         except Exception as e:
             print(f'Error in reading parquet file: {e}')
 
+class Transform:
+    """
+    Class used to transform extracted data
+
+    Methods:
+        remove_duplicates(df): Remove duplicates in the dataframe
+        remove_blanks(): Handle blank fields in the dataframe
+    """
+    @staticmethod
+    def remove_duplicates(df):
+        """
+        Removes duplicate rows from the dataframe
+
+        Args:
+            df(DataFrame): Data frame
+
+        Returns:
+            df: A processed data frame without duplicates
+
+        Raises:
+
+        """
+        pass
+
+    @staticmethod
+    def remove_blanks(df):
+        """
+        Removes rows with columns that are empty
+
+        Args:
+            df(DataFrame): Data frame
+
+        Returns:
+            df: A processed data frame without blank columns
+
+        Raises:
+            AttributeError: If a wrong object is passed instead of a data frame.
+
+        """
+        try:
+            df = df.dropna(inplace=True)
+            return df
+        except AttributeError:
+            print('Error: Passed parameter is not a pandas dataframe')
+        except Exception as e:
+            print(f'Error: {e}')
+

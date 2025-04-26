@@ -2,3 +2,6 @@
 test/__pycache__/
 src/etl_package_maiyo008/__pycache__/
 etl/
+test/.ipynb_checkpoints/
+.ipynb_checkpoints/
+../.ipynb_checkpoints/

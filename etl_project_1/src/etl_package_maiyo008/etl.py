@@ -57,9 +57,15 @@ class Transform:
             df: A processed data frame without duplicates
 
         Raises:
-
+        AttributeError: If a wrong object is passed instead of a data frame.
         """
-        pass
+        try:
+            df = df.drop_duplicates(inplace=True)
+            return df
+        except AttributeError:
+            print('Error: Passed parameter is not a pandas dataframe')
+        except Exception as e:
+            print(f'Error: {e}')
 
     @staticmethod
     def remove_blanks(df):

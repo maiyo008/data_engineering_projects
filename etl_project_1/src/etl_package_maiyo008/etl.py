@@ -3,6 +3,7 @@
 This is an ETL pipeline script that defines three classes(Extract, Transform, Load)
 """
 import pandas as pd
+import psycopg2
 
 
 class Extract:
@@ -90,3 +91,41 @@ class Transform:
         except Exception as e:
             print(f'Error: {e}')
 
+class Load:
+    """
+    Class used to load data to various destinations.
+
+    Methods:
+        connect_postgres(): Connect to postgres DB
+
+
+    """
+    @staticmethod
+    def connect_postgres(database:str, host:str, user:str, password:str, port:int = 5432):
+        """
+        Connects to postgres database
+
+        Args:
+            database(str): database name
+            host(str): host
+            user(str): user
+            password(str): password
+            port(int): port (default=5432)
+        
+        Returns: A connection object
+
+        Raises:
+            ConnectionError: If passed args fails to create a connection to the database.
+
+        """
+        try:
+            conn = psycopg2.connect(database = database, 
+                        user = user, 
+                        host= host,
+                        password = password,
+                        port = port)
+            return conn
+        except ConnectionError as e:
+            print(f'Failed to connect to the database: {e}')
+        except Exception as e:
+            print(f'Error occured while connecting to database: {e}')

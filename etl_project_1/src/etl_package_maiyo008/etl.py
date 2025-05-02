@@ -4,6 +4,9 @@ This is an ETL pipeline script that defines three classes(Extract, Transform, Lo
 """
 import pandas as pd
 import psycopg2
+from sqlalchemy import URL
+from sqlalchemy import create_engine
+from tqdm import tqdm 
 
 
 class Extract:
@@ -30,9 +33,10 @@ class Extract:
         """
         try:
             df = pd.read_parquet(path)
+            df['created_at'] = pd.Timestamp.now()
             return df
         except FileNotFoundError:
-            print(f'File {path} not found')
+            print(f'File {http://localhost:8888/tree?token=f56abbe7298ff9b18dd1cd187c162395bacf5d7a33b95929path} not found')
         except ImportError:
             print('Required parquet engine not installed (pyarrow or fastparquet)')
         except Exception as e:
@@ -61,8 +65,8 @@ class Transform:
         AttributeError: If a wrong object is passed instead of a data frame.
         """
         try:
-            df = df.drop_duplicates(inplace=True)
-            return df
+            new_df = df.drop_duplicates()
+            return new_df
         except AttributeError:
             print('Error: Passed parameter is not a pandas dataframe')
         except Exception as e:
@@ -84,8 +88,8 @@ class Transform:
 
         """
         try:
-            df = df.dropna(inplace=True)
-            return df
+            new_df = df.dropna()
+            return new_df
         except AttributeError:
             print('Error: Passed parameter is not a pandas dataframe')
         except Exception as e:
@@ -97,7 +101,7 @@ class Load:
 
     Methods:
         connect_postgres(): Connect to postgres DB
-
+        write_to_db(): Write data to the database
 
     """
     @staticmethod
@@ -119,13 +123,44 @@ class Load:
 
         """
         try:
-            conn = psycopg2.connect(database = database, 
-                        user = user, 
-                        host= host,
-                        password = password,
-                        port = port)
-            return conn
+            url_object = URL.create(
+                "postgresql+psycopg2",
+                username=user,
+                password=password,
+                host=host,
+                port=port,
+                database=database,
+            )
+            engine = create_engine(url_object)
+            return engine
         except ConnectionError as e:
             print(f'Failed to connect to the database: {e}')
         except Exception as e:
             print(f'Error occured while connecting to database: {e}')
+
+    @staticmethod
+    def write_to_db(df:pd.DataFrame, table_name:str, conn:object, chunk_size:int = 1000):
+        """
+        Writes dataframe to database
+
+        Args:
+            df(Data frame): Dataframe
+            table_name(str): Table name
+            conn(obj): Database connection object
+        """
+        try:
+            # Create or replace schema/table
+            df.head(0).to_sql(name=table_name, con=conn, if_exists='replace', index=False)
+            print(f"Initialized table `{table_name}` in database.")
+
+            # Write in chunks with feedback
+            total_rows = len(df)
+            print(f"Loading {total_rows} rows in chunks of {chunk_size}...")
+
+            for i in tqdm(range(0, total_rows, chunk_size)):
+                chunk = df.iloc[i:i+chunk_size]
+                chunk.to_sql(name=table_name, con=conn, if_exists='append', index=False)
+            
+            print("✅ Successfully loaded dataframe to database.")
+        except Exception as e:
+            print(f'Error in loading dataframe to db: {e}')

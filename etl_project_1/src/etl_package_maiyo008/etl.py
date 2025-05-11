@@ -195,3 +195,25 @@ class Load:
             print("✅ Successfully loaded dataframe to database.")
         except Exception as e:
             print(f'Error in loading dataframe to db: {e}')
+    
+    @staticmethod
+    def write_to_csv(df:pd.DataFrame, filename:str, chunk_size):
+        """
+        Writes dataframe to a csv file
+
+        Args:
+            df(DataFrame): Dataframe
+            filename(str): Name for CSV file to be created
+        
+        Returns: None
+
+        Raises:
+            Exception: Any error
+
+        """
+        try:
+            df.to_csv(filename, index=False)
+            print(f'✅ Successfully loaded data to {filename}')
+        except Exception as e:
+            print(f'Error occured while loading to csv: {e}')
+

@@ -64,6 +64,7 @@ class Extract:
             response.raise_for_status()
             data = response.json()
             df = pd.DataFrame(data)
+            df['created_at'] = pd.Timestamp.now()
             return df
         except HTTPError as http_err:
             print(f'HTTP error occurred: {http_err}')

@@ -9,3 +9,4 @@ test/.ipynb_checkpoints/
 .env
 dist/
 /src/etl_package_maiyo008.egg-info/
+test/

@@ -21,14 +21,15 @@ pip install etl-package-maiyo008
 - Load data into PostgreSQL with:
   - Chunked inserts for performance
   - Progress feedback via tqdm
+- Load data into a csv file
+  - Separator is a comma
+  - Creates the csv within the same working directory
 
 ## 📁 Project Structure
 
 ```
 etl_package_maiyo008/
-├── extract.py
-├── transform.py
-├── load.py
+├── etl.py
 ├── __init__.py
 ```
 
@@ -42,8 +43,16 @@ from etl_package_maiyo008.etl import Extract, Transform, Load
 
 2. Extract data
 
+Exctract from a parquet file
+
 ```
 df = Extract.load_parquet("data/sample_data.parquet")
+```
+
+Extract from an API
+
+```
+df = Extract.load_api(url)
 ```
 
 3. Transform data
@@ -64,6 +73,12 @@ conn = Load.connect_postgres(
 )
 
 Load.write_to_db(df_clean, table_name="cleaned_data", conn=conn)
+```
+
+5. Load Data to csv
+
+```
+Load.write_to_csv(df, filename)
 ```
 
 ## 📚 Method Reference

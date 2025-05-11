@@ -197,7 +197,7 @@ class Load:
             print(f'Error in loading dataframe to db: {e}')
     
     @staticmethod
-    def write_to_csv(df:pd.DataFrame, filename:str, chunk_size):
+    def write_to_csv(df:pd.DataFrame, filename:str):
         """
         Writes dataframe to a csv file
 

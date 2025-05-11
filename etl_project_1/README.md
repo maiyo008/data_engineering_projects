@@ -113,11 +113,12 @@ Load.write_to_csv(df, filename)
 - SQLAlchemy
 - tqdm
 - pyarrow or fastparquet (for Parquet support)
+- requests (for apis)
 
 Install requirements with:
 
 ```
-pip install pandas psycopg2-binary SQLAlchemy tqdm pyarrow
+pip install pandas psycopg2-binary SQLAlchemy tqdm pyarrow requests
 ```
 
 ## ✅ License

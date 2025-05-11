@@ -1,10 +1,10 @@
 [project]
 name = "etl_package_maiyo008"
-version = "0.0.1"
+version = "0.0.2"
 authors = [
   { name="tony maiyo", email="tonymaiyo008@gmail.com" },
 ]
-description = "An ETL package that loads data, cleans and loads it to a postgres database"
+description = "An update to ETL package that loads data from API, cleans and loads it to a csv"
 readme = "README.md"
 requires-python = ">=3.12"
 classifiers = [

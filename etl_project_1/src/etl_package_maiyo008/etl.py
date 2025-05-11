@@ -6,7 +6,9 @@ import pandas as pd
 import psycopg2
 from sqlalchemy import URL
 from sqlalchemy import create_engine
-from tqdm import tqdm 
+from tqdm import tqdm
+from requests import get
+from requests.exceptions import HTTPError
 
 
 class Extract:
@@ -36,11 +38,39 @@ class Extract:
             df['created_at'] = pd.Timestamp.now()
             return df
         except FileNotFoundError:
-            print(f'File {http://localhost:8888/tree?token=f56abbe7298ff9b18dd1cd187c162395bacf5d7a33b95929path} not found')
+            print(f'File {path} not found')
         except ImportError:
             print('Required parquet engine not installed (pyarrow or fastparquet)')
         except Exception as e:
             print(f'Error in reading parquet file: {e}')
+    
+    @staticmethod
+    def load_api(url:str):
+        """
+        Loads data from an API endpoint to a pandas data frame
+
+        Args:
+            url(str): URL string for the API endpoint
+        
+        Returns:
+            df: A pandas dataframe
+        
+        Raises:
+            HTTPError: Errors for status codes between 400 and 600
+            Exception: Any other error not related to HTTP status codes
+        """
+        try:
+            response = get(URL)
+            response.raise_for_status()
+            data = response.json()
+            df = pd.DataFrame(data)
+            return df
+        except HTTPError as http_err:
+            print(f'HTTP error occurred: {http_err}')
+        except Exception as err:
+            print(f'Other error occured: {err}')
+        else:
+            print(f'Success: {response.status_code}')
 
 class Transform:
     """
